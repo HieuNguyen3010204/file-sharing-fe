@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="file-sharing-fe/file-sharing-fe.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
