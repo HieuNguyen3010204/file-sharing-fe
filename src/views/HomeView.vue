@@ -87,16 +87,19 @@
         </button>
       </div>
 
-      <!-- Nút Reset riêng biệt nằm ở dưới -->
+     
       <button @click="resetAll"
               class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-sm rounded transition-colors border border-gray-300">
         🔄 Tải lên file khác
       </button>
     </div>
   </div>
+
+
 </template>
 
 <script setup>
+  import axios from 'axios';
   import { ref } from 'vue'
 
   const fileInput = ref(null)
@@ -107,6 +110,7 @@
   const uploadSuccess = ref(false)
   const shareUrl = ref('')
   const copied = ref(false)
+  const API_BASE_URL = 'http://localhost:5000/api/v1/files';
 
   // Trigger the hidden file input when the container is clicked
   const triggerFileInput = () => {
@@ -161,18 +165,56 @@
   }
 
   // Simulate real-time upload process
-  const startUpload = () => {
-    if (!selectedFile.value) return
+  const startUpload = async () => {
+    if (!selectedFile.value) return;
 
-    isUploading.value = true
-    uploadProgress.value = 0
+    isUploading.value = true;
+    uploadProgress.value = 0;
 
-    const interval = setInterval(() => {
-      uploadProgress.value += 10
-      if (uploadProgress.value >= 100) {
-        clearInterval(interval)
-        isUploading.value = false
-        uploadSuccess.value = true
+    // 1. Đóng gói file vào FormData
+    const formData = new FormData();
+    formData.append('file', selectedFile.value); // Chú ý: 'file' phải trùng tên với param IFormFile bên C#
+
+    try {
+      // 2. Gọi API Upload thật
+      const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        // 3. Đo tiến trình upload mạng thật (Real Network Progress)
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          uploadProgress.value = percentCompleted;
+        }
+      });
+
+      // 4. Xử lý khi thành công
+      if (response.data && response.data.success) {
+        isUploading.value = false;
+        uploadSuccess.value = true;
+
+        const fileData = response.data.data;
+        shareUrl.value = `${window.location.origin}/f/${fileData.code}`;
+
+        // 5. Lưu thông tin vào Lịch Sử LocalStorage
+        const historyRecord = {
+          code: fileData.code,
+          name: fileData.originalFileName,
+          size: formatFileSize(fileData.sizeBytes), // Chuyển số bytes thành KB/MB
+          createdAt: new Date().toLocaleDateString('vi-VN')
+        };
+
+        const history = JSON.parse(localStorage.getItem('upload_history') || '[]');
+        history.unshift(historyRecord);
+        localStorage.setItem('upload_history', JSON.stringify(history));
+      }
+    } catch (error) {
+      isUploading.value = false;
+      // Báo lỗi từ Server hoặc lỗi quá dung lượng 10MB
+      const errorMsg = error.response?.data?.message || 'Upload thất bại. File có thể vượt quá 10MB!';
+      alert(errorMsg);
+    }
+  };
 
         // Tạo mã ngẫu nhiên
         const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase()
@@ -196,6 +238,15 @@
       }
     }, 150)
   }
+
+
+      const formatFileSize = (bytes) => {
+      if (!bytes || bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
 
   // Copy link
   const copyShareUrl = () => {
