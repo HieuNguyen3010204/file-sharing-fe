@@ -91,7 +91,8 @@
   import axios from 'axios';
 
   const route = useRoute();
-  const API_BASE_URL = 'http://localhost:5000/api/v1/files';
+  // Đã cập nhật sang live URL trên Render
+  const API_BASE_URL = 'https://filesharing-backend-api.onrender.com/api/v1/files';
 
   const fileCode = ref('');
   const fileInfo = ref(null);

@@ -99,7 +99,8 @@
   import { ref } from 'vue'
   import axios from 'axios'
 
-  const API_BASE_URL = 'http://192.168.1.15:5000/api/v1/files'
+  // URL Backend API đã deploy trên Render
+  const API_BASE_URL = 'https://filesharing-backend-api.onrender.com/api/v1/files'
 
   const fileInput = ref(null)
   const selectedFile = ref(null)
