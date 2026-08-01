@@ -99,7 +99,7 @@
   import { ref } from 'vue'
   import axios from 'axios'
 
-  const API_BASE_URL = 'http://localhost:5000/api/v1/files'
+  const API_BASE_URL = 'http://192.168.1.15:5000/api/v1/files'
 
   const fileInput = ref(null)
   const selectedFile = ref(null)
