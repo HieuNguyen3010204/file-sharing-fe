@@ -75,7 +75,7 @@
         <span>File uploaded successfully.!</span>
       </div>
 
-      <!-- Hàng chứa Input link + Nút Copy -->
+      <!-- Row containing input link + Copy button -->
       <div class="flex items-center space-x-2">
         <input type="text"
                readonly
@@ -98,9 +98,8 @@
 <script setup>
   import { ref } from 'vue'
   import axios from 'axios'
-
-  // URL Backend API đã deploy trên Render
-  const API_BASE_URL = 'https://filesharing-backend-api.onrender.com/api/v1/files'
+// Backend API URL deployed on Render
+  const API_BASE_URL = 'https://filesharing-backend-v2.onrender.com/api/v1/files'
 
   const fileInput = ref(null)
   const selectedFile = ref(null)
@@ -163,7 +162,7 @@
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
-  // Gọi API Upload thật qua Axios
+  // Call the actual upload API via Axios
   const startUpload = async () => {
     if (!selectedFile.value) return
 
@@ -193,7 +192,7 @@
         const fileData = response.data.data
         shareUrl.value = `${window.location.origin}/f/${fileData.code}`
 
-        // Lưu lịch sử upload
+    // Save upload history
         const historyRecord = {
           code: fileData.code,
           name: fileData.originalFileName,
@@ -221,7 +220,7 @@
     }, 2000)
   }
 
-  // Reset toàn bộ về trạng thái ban đầu
+ // Reset everything to the initial state
   const resetAll = () => {
     selectedFile.value = null
     resetUploadState()

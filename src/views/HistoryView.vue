@@ -1,21 +1,20 @@
 <template>
   <div class="max-w-4xl mx-auto space-y-6">
-    <!-- Header của trang Lịch sử -->
+    <!-- Header for the History page -->
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-2xl font-bold text-gray-800">Lịch sử tải lên</h1>
         <p class="text-sm text-gray-500">Danh sách các file bạn đã tải lên trên thiết bị này</p>
       </div>
-
-      <!-- Nút Xóa tất cả lịch sử -->
+      <!-- Clear all history button -->
       <button v-if="historyList.length > 0"
               @click="clearAllHistory"
               class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-medium rounded-lg transition-colors border border-red-200">
-        🗑️ Xóa tất cả lịch sử
+        🗑️ Delete all history
       </button>
     </div>
 
-    <!-- Trạng thái 1: Chưa có lịch sử upload nào -->
+    <!-- State 1: No upload history yet -->
     <div v-if="historyList.length === 0"
          class="bg-white p-12 rounded-xl border border-gray-200 text-center space-y-4 shadow-sm">
       <div class="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto text-3xl">
@@ -31,7 +30,7 @@
       </router-link>
     </div>
 
-    <!-- Trạng thái 2: Bảng danh sách Lịch sử -->
+    <!-- State 2: History List Table -->
     <div v-else class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm text-gray-600">
@@ -46,26 +45,30 @@
           </thead>
           <tbody class="divide-y divide-gray-100">
             <tr v-for="item in historyList" :key="item.code" class="hover:bg-gray-50/80 transition-colors">
-              <!-- Tên File -->
+
+              <!-- File Name -->
               <td class="px-6 py-4 font-medium text-gray-800 flex items-center space-x-2">
                 <span class="text-base">📄</span>
                 <span class="truncate max-w-[180px]" :title="item.name">{{ item.name }}</span>
               </td>
 
-              <!-- Mã Chia Sẻ -->
+              <!-- Share Code -->
               <td class="px-6 py-4">
                 <span class="font-mono bg-gray-100 text-gray-700 px-2 py-1 rounded font-bold text-xs uppercase">
                   {{ item.code }}
                 </span>
               </td>
 
-              <!-- Kích Thước -->
+
+              <!-- Dimensions -->
               <td class="px-6 py-4">{{ item.size }}</td>
 
-              <!-- Ngày Upload -->
+
+              <!-- Upload Date -->
               <td class="px-6 py-4 text-gray-500 text-xs">{{ item.createdAt }}</td>
 
-              <!-- Nút Hành Động (Copy link & Xóa) -->
+
+              <!-- Action Buttons (Copy link & Delete) -->
               <td class="px-6 py-4 text-center">
                 <div class="flex items-center justify-center space-x-2">
                   <button @click="copyLink(item.code)"
@@ -92,7 +95,8 @@
 const historyList = ref([])
 const copiedCode = ref('')
 
-// Load lịch sử từ localStorage khi mở trang
+
+// Load history from localStorage when the page opens
 const loadHistory = () => {
   const saved = localStorage.getItem('upload_history')
   if (saved) {
@@ -106,7 +110,8 @@ onMounted(() => {
   loadHistory()
 })
 
-// Copy link chia sẻ của file trong bảng
+
+// Copy the file's share link from the table
 const copyLink = (code) => {
   const url = `${window.location.origin}/f/${code}`
   navigator.clipboard.writeText(url)
@@ -116,7 +121,7 @@ const copyLink = (code) => {
   }, 2000)
 }
 
-// Xóa 1 dòng khỏi lịch sử
+// Delete a line from the history
 const deleteItem = (code) => {
   if (confirm('Bạn có chắc muốn xóa file này khỏi lịch sử?')) {
     historyList.value = historyList.value.filter(item => item.code !== code)
@@ -125,9 +130,10 @@ const deleteItem = (code) => {
   }
 }
 
-// Xóa sạch toàn bộ lịch sử
+
+// Clear entire history
 const clearAllHistory = () => {
-  if (confirm('Bạn có chắc muốn xóa sạch toàn bộ lịch sử tải lên?')) {
+  if (confirm('Are you sure you want to clear your entire upload history?')) {
     historyList.value.forEach(item => {
       localStorage.removeItem(`file_${item.code}`)
     })

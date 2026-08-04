@@ -6,7 +6,7 @@
         📄
       </div>
 
-      <!-- Tiêu đề & Mã chia sẻ -->
+      <!-- Title & Share Code -->
       <div class="space-y-2">
         <h2 class="text-2xl font-bold text-gray-800">File được chia sẻ</h2>
         <p class="text-sm text-gray-500">
@@ -17,7 +17,7 @@
         </p>
       </div>
 
-      <!-- TRƯỜNG HỢP 1: THẤT BẠI (File không tồn tại / Hết hạn / Quá lượt tải) -->
+      <!-- CASE 1: FAILURE (File does not exist / Expired / Download limit exceeded) -->
       <div v-if="isNotFound"
            class="bg-red-50 border border-red-200 p-6 rounded-xl text-center space-y-4 shadow-sm">
         <div class="w-12 h-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto text-2xl">
@@ -31,9 +31,9 @@
         </div>
       </div>
 
-      <!-- TRƯỜNG HỢP 2: THÀNH CÔNG (Hiện bảng thông tin file + Nút Tải) -->
+      <!-- CASE 2: SUCCESS (Display file info + Download button) -->
       <div v-else-if="fileInfo" class="space-y-6">
-        <!-- Khối chi tiết thông tin file -->
+        <!-- File information details block -->
         <div class="bg-gray-50 p-4 rounded-lg text-left text-sm space-y-3 border border-gray-100">
           <div class="flex justify-between items-center pb-2 border-b border-gray-200">
             <span class="text-gray-500 font-medium">Tên file:</span>
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <!-- Nút Tải file xuống (có hiệu ứng xoay spinner) -->
+        <!-- File download button (with spinner effect) -->
         <button @click="handleDownload"
                 :disabled="isDownloading"
                 class="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold rounded-lg shadow-md transition-colors flex items-center justify-center space-x-2">
@@ -91,8 +91,8 @@
   import axios from 'axios';
 
   const route = useRoute();
-  // Đã cập nhật sang live URL trên Render
-  const API_BASE_URL = 'https://filesharing-backend-api.onrender.com/api/v1/files';
+  // Updated to the live URL on Render
+  const API_BASE_URL = 'https://filesharing-backend-v2.onrender.com/api/v1/files'
 
   const fileCode = ref('');
   const fileInfo = ref(null);
