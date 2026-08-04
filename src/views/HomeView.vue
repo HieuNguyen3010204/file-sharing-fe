@@ -89,7 +89,8 @@
 
       <button @click="resetAll"
               class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-sm rounded transition-colors border border-gray-300">
-        🔄 Tải lên file khác
+        🔄
+        Upload another file
       </button>
     </div>
   </div>
