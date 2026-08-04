@@ -61,6 +61,19 @@
       </div>
     </div>
 
+    <!-- Form Settings -->
+    <div v-if="selectedFile && !isUploading && !uploadSuccess" class="space-y-4 bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Expiry (Days)</label>
+        <input type="number" v-model="expiryDays" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="7">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Max Downloads</label>
+        <input type="number" v-model="maxDownloads" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border" placeholder="Leave empty for unlimited">
+      </div>
+    </div>
+
+
     <!-- Start Upload Button -->
     <button v-if="selectedFile && !isUploading && !uploadSuccess"
             @click="startUpload"
@@ -110,6 +123,8 @@
   const uploadSuccess = ref(false)
   const shareUrl = ref('')
   const copied = ref(false)
+  const expiryDays = ref('7') 
+  const maxDownloads = ref('') 
 
   // Trigger the hidden file input when the container is clicked
   const triggerFileInput = () => {
@@ -172,6 +187,15 @@
 
     const formData = new FormData()
     formData.append('file', selectedFile.value)
+
+
+    if (maxDownloads.value) {
+    formData.append('maxDownloads', maxDownloads.value)
+    }
+    if (expiryDays.value) {
+    // Convert days to hours for the backend
+    formData.append('expiryHours', String(Number(expiryDays.value) * 24))
+    }
 
     try {
       const response = await axios.post(`${API_BASE_URL}/upload`, formData, {

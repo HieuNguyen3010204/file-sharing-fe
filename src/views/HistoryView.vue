@@ -90,7 +90,9 @@
   </div>
 </template>
 
-<script setup>import { ref, onMounted } from 'vue'
+<script setup>
+import { ref, onMounted } from 'vue'
+import axios from'axios'
 
 const historyList = ref([])
 const copiedCode = ref('')
@@ -122,11 +124,22 @@ const copyLink = (code) => {
 }
 
 // Delete a line from the history
-const deleteItem = (code) => {
-  if (confirm('Bạn có chắc muốn xóa file này khỏi lịch sử?')) {
-    historyList.value = historyList.value.filter(item => item.code !== code)
-    localStorage.setItem('upload_history', JSON.stringify(historyList.value))
-    localStorage.removeItem(`file_${code}`)
+const deleteItem = async (code) => {
+  if (confirm('Bạn có chắc muốn xóa file này khỏi lịch sử và máy chủ?')) {
+    try {
+      // 1. Delete from Backend FIRST
+      // Using the v2 URL from your template
+      await axios.delete(`https://filesharing-backend-v2.onrender.com/api/v1/files/${code}`);
+      
+      // 2. Delete from LocalStorage ONLY if backend succeeds
+      historyList.value = historyList.value.filter(item => item.code !== code);
+      localStorage.setItem('upload_history', JSON.stringify(historyList.value));
+      localStorage.removeItem(`file_${code}`);
+      
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert('Lỗi: Không thể xóa file trên máy chủ. File có thể đã bị xóa hoặc máy chủ đang lỗi.');
+    }
   }
 }
 
