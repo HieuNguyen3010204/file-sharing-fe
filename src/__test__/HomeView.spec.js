@@ -90,10 +90,13 @@ describe('HomeView.vue - Advanced Interactivity & Network Tests', () => {
 
   // 🧪 TEST CASE 4: Kiểm thử sự kiện Copy Link
   it('phải đổi trạng thái nút sang "Copied!" khi bấm nút copy', async () => {
-    Object.assign(navigator, {
-      clipboard: {
+    // FIX: Use Object.defineProperty to override the read-only navigator.clipboard getter safely
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
         writeText: vi.fn().mockImplementation(() => Promise.resolve()),
       },
+      writable: true,
+      configurable: true,
     })
 
     const wrapper = mount(HomeView)
