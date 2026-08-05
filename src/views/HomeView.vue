@@ -91,6 +91,7 @@
       <!-- Row containing input link + Copy button -->
       <div class="flex items-center space-x-2">
         <input type="text"
+
                readonly
                :value="shareUrl"
                class="w-full p-2 text-sm bg-white border border-gray-300 rounded focus:outline-none" />

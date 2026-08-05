@@ -3,8 +3,8 @@
     <!-- Header for the History page -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-2xl font-bold text-gray-800">Lịch sử tải lên</h1>
-        <p class="text-sm text-gray-500">Danh sách các file bạn đã tải lên trên thiết bị này</p>
+        <h1 class="text-2xl font-bold text-gray-800">Upload history</h1>
+        <p class="text-sm text-gray-500">List of files you have uploaded on this device</p>
       </div>
       <!-- Clear all history button -->
       <button v-if="historyList.length > 0"
@@ -21,12 +21,12 @@
         🗂️
       </div>
       <div class="space-y-1">
-        <h3 class="text-lg font-semibold text-gray-700">Chưa có lịch sử tải lên</h3>
-        <p class="text-sm text-gray-400">Các file bạn upload sẽ xuất hiện tại đây.</p>
+        <h3 class="text-lg font-semibold text-gray-700">No upload history yet.</h3>
+        <p class="text-sm text-gray-400">The files you upload will appear here..</p>
       </div>
       <router-link to="/"
                    class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
-        Tải file đầu tiên ngay
+        Download the first file now.
       </router-link>
     </div>
 
@@ -36,11 +36,21 @@
         <table class="w-full text-left text-sm text-gray-600">
           <thead class="bg-gray-50 text-gray-700 font-semibold border-b border-gray-200 uppercase text-xs">
             <tr>
-              <th class="px-6 py-4">Tên File</th>
-              <th class="px-6 py-4">Mã Chia Sẻ</th>
-              <th class="px-6 py-4">Kích Thước</th>
-              <th class="px-6 py-4">Ngày Upload</th>
-              <th class="px-6 py-4 text-center">Hành Động</th>
+              <th class="px-6 py-4">
+                File Name
+               </th>
+              <th class="px-6 py-4">
+                Share Code
+              </th>
+              <th class="px-6 py-4">
+                Size
+              </th>
+              <th class="px-6 py-4">
+                Upload Date
+              </th>
+              <th class="px-6 py-4 text-center">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
@@ -73,11 +83,11 @@
                 <div class="flex items-center justify-center space-x-2">
                   <button @click="copyLink(item.code)"
                           class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded text-xs font-medium transition-colors">
-                    {{ copiedCode === item.code ? 'Đã Copy!' : 'Copy Link' }}
+                    {{ copiedCode === item.code ? 'Copied!' : 'Copy Link' }}
                   </button>
                   <button @click="deleteItem(item.code)"
                           class="p-1.5 text-gray-400 hover:text-red-600 rounded transition-colors"
-                          title="Xóa khỏi lịch sử">
+                          title="Remove from history">
                     ❌
                   </button>
                 </div>
@@ -125,7 +135,7 @@ const copyLink = (code) => {
 
 // Delete a line from the history
 const deleteItem = async (code) => {
-  if (confirm('Bạn có chắc muốn xóa file này khỏi lịch sử và máy chủ?')) {
+    if (confirm('Are you sure you want to delete this file from the history and the server?')) {
     try {
       // 1. Delete from Backend FIRST
       // Using the v2 URL from your template
@@ -137,8 +147,8 @@ const deleteItem = async (code) => {
       localStorage.removeItem(`file_${code}`);
       
     } catch (error) {
-      console.error("Delete error:", error);
-      alert('Lỗi: Không thể xóa file trên máy chủ. File có thể đã bị xóa hoặc máy chủ đang lỗi.');
+        console.error("Delete error:", error);
+        alert('Error: Unable to delete the file on the server. The file may have already been deleted, or the server is experiencing an error.');
     }
   }
 }
