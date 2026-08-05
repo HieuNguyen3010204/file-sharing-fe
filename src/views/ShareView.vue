@@ -36,7 +36,7 @@
         <!-- File information details block -->
         <div class="bg-gray-50 p-4 rounded-lg text-left text-sm space-y-3 border border-gray-100">
           <div class="flex justify-between items-center pb-2 border-b border-gray-200">
-            <span class="text-gray-500 font-medium">Tên file:</span>
+            <span class="text-gray-500 font-medium">Tên file:</span>f
             <span class="font-semibold text-gray-800 truncate max-w-[220px]" :title="fileInfo.name">
               {{ fileInfo.name }}
             </span>
